@@ -6,6 +6,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.UUID;
 
 public class CreateLocationRequest {
 
@@ -32,6 +33,11 @@ public class CreateLocationRequest {
     @DecimalMin(value = "-180.0", message = "Longitude must be at least -180")
     @DecimalMax(value = "180.0", message = "Longitude must be at most 180")
     private Double lng;
+
+    // TODO: Temporary field to bypass user authentication
+    // Replace by getting user from authenticated session token
+    @NotNull(message = "createdById is required")
+    private UUID createdById;
 
     public CreateLocationRequest() {
     }
@@ -82,5 +88,13 @@ public class CreateLocationRequest {
 
     public void setLng(Double lng) {
         this.lng = lng;
+    }
+
+    public UUID getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(UUID createdById) {
+        this.createdById = createdById;
     }
 }
