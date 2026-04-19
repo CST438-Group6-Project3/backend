@@ -4,6 +4,10 @@ import com.HiddenGems.backend.dto.location.CreateLocationRequest;
 import com.HiddenGems.backend.dto.location.LocationResponse;
 import com.HiddenGems.backend.service.LocationService;
 import jakarta.validation.Valid;
+
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,5 +26,17 @@ public class LocationController {
     public ResponseEntity<LocationResponse> createLocation(@Valid @RequestBody CreateLocationRequest request) {
         LocationResponse created = locationService.createLocation(request);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LocationResponse>> getAllLocations() {
+        List<LocationResponse> locations = locationService.getAllLocations();
+        return ResponseEntity.ok(locations);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<LocationResponse> getLocationById(@PathVariable UUID id) {
+        LocationResponse location = locationService.getLocationById(id);
+        return ResponseEntity.ok(location);
     }
 }

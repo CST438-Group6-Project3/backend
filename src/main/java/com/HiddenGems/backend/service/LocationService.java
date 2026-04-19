@@ -6,6 +6,10 @@ import com.HiddenGems.backend.entity.Location;
 import com.HiddenGems.backend.entity.User;
 import com.HiddenGems.backend.repository.LocationRepository;
 import com.HiddenGems.backend.repository.UserRepository;
+
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,4 +42,18 @@ public class LocationService {
         Location saved = locationRepository.save(location);
         return new LocationResponse(saved);
     }
+
+    public List<LocationResponse> getAllLocations() {
+        return locationRepository.findAll()
+                .stream()
+                .map(LocationResponse::new)
+                .toList();
+    }
+
+    public LocationResponse getLocationById(UUID id) {
+    Location location = locationRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Location not found"));
+
+    return new LocationResponse(location);
+}
 }
