@@ -1,6 +1,7 @@
 package com.HiddenGems.backend.service;
 
 import com.HiddenGems.backend.dto.location.CreateLocationRequest;
+import com.HiddenGems.backend.dto.location.LocationResponse;
 import com.HiddenGems.backend.entity.Location;
 import com.HiddenGems.backend.entity.User;
 import com.HiddenGems.backend.repository.LocationRepository;
@@ -18,7 +19,7 @@ public class LocationService {
         this.userRepository = userRepository;
     }
 
-    public Location createLocation(CreateLocationRequest request) {
+    public LocationResponse createLocation(CreateLocationRequest request) {
         // .orElseThrow handles the case that there is no user with said ID (findById
         // returns Optional<User>)
         // TODO: Currently uses createdById for testing, get user from auth context when authentication is added
@@ -34,6 +35,7 @@ public class LocationService {
         location.setLng(request.getLng());
         location.setCreatedBy(user);
 
-        return locationRepository.save(location);
+        Location saved = locationRepository.save(location);
+        return new LocationResponse(saved);
     }
 }

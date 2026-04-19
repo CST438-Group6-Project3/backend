@@ -1,7 +1,7 @@
 package com.HiddenGems.backend.controller;
 
 import com.HiddenGems.backend.dto.location.CreateLocationRequest;
-import com.HiddenGems.backend.entity.Location;
+import com.HiddenGems.backend.dto.location.LocationResponse;
 import com.HiddenGems.backend.service.LocationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,9 +19,8 @@ public class LocationController {
     }
 
     @PostMapping
-    public ResponseEntity<Location> createLocation(@Valid @RequestBody CreateLocationRequest request) {
-        Location created = locationService.createLocation(request);
-        // TODO: Return response DTO once created instead of raw location entity
+    public ResponseEntity<LocationResponse> createLocation(@Valid @RequestBody CreateLocationRequest request) {
+        LocationResponse created = locationService.createLocation(request);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 }
