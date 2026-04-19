@@ -13,6 +13,7 @@ import java.util.UUID;
 @Table(name = "locations")
 public class Location {
 
+    // enum used so only these values are valid for their respective fields
     public enum Category {
         study_spot,
         food,
@@ -72,9 +73,11 @@ public class Location {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // constructor
     public Location() {
     }
 
+    // getters/setters
     public UUID getId() {
         return id;
     }
