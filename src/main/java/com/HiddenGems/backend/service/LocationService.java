@@ -43,12 +43,23 @@ public class LocationService {
         return new LocationResponse(saved);
     }
 
-    public List<LocationResponse> getAllLocations() {
-        return locationRepository.findAll()
-                .stream()
-                .map(LocationResponse::new)
-                .toList();
+    public List<LocationResponse> getLocations(Location.Category category, Location.Status status) {
+    List<Location> locations;
+
+    if (category != null && status != null) {
+        locations = locationRepository.findByCategoryAndStatus(category, status);
+    } else if (category != null) {
+        locations = locationRepository.findByCategory(category);
+    } else if (status != null) {
+        locations = locationRepository.findByStatus(status);
+    } else {
+        locations = locationRepository.findAll();
     }
+
+    return locations.stream()
+            .map(LocationResponse::new)
+            .toList();
+}
 
     public LocationResponse getLocationById(UUID id) {
     Location location = locationRepository.findById(id)

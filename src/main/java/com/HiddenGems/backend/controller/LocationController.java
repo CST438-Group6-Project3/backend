@@ -2,6 +2,7 @@ package com.HiddenGems.backend.controller;
 
 import com.HiddenGems.backend.dto.location.CreateLocationRequest;
 import com.HiddenGems.backend.dto.location.LocationResponse;
+import com.HiddenGems.backend.entity.Location;
 import com.HiddenGems.backend.service.LocationService;
 import jakarta.validation.Valid;
 
@@ -29,8 +30,10 @@ public class LocationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LocationResponse>> getAllLocations() {
-        List<LocationResponse> locations = locationService.getAllLocations();
+    public ResponseEntity<List<LocationResponse>> getLocations(
+            @RequestParam(required = false) Location.Category category,
+            @RequestParam(required = false) Location.Status status) {
+        List<LocationResponse> locations = locationService.getLocations(category, status);
         return ResponseEntity.ok(locations);
     }
 
