@@ -2,6 +2,7 @@ package com.HiddenGems.backend.controller;
 
 import com.HiddenGems.backend.dto.location.CreateLocationRequest;
 import com.HiddenGems.backend.dto.location.LocationResponse;
+import com.HiddenGems.backend.dto.location.UpdateLocationRequest;
 import com.HiddenGems.backend.entity.Location;
 import com.HiddenGems.backend.service.LocationService;
 import jakarta.validation.Valid;
@@ -41,5 +42,13 @@ public class LocationController {
     public ResponseEntity<LocationResponse> getLocationById(@PathVariable UUID id) {
         LocationResponse location = locationService.getLocationById(id);
         return ResponseEntity.ok(location);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<LocationResponse> updateLocation(
+            @PathVariable UUID id,
+            @Valid @RequestBody UpdateLocationRequest request) {
+        LocationResponse updated = locationService.updateLocation(id, request);
+        return ResponseEntity.ok(updated);
     }
 }

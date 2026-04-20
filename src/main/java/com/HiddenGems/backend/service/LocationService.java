@@ -2,6 +2,7 @@ package com.HiddenGems.backend.service;
 
 import com.HiddenGems.backend.dto.location.CreateLocationRequest;
 import com.HiddenGems.backend.dto.location.LocationResponse;
+import com.HiddenGems.backend.dto.location.UpdateLocationRequest;
 import com.HiddenGems.backend.entity.Location;
 import com.HiddenGems.backend.entity.User;
 import com.HiddenGems.backend.repository.LocationRepository;
@@ -26,7 +27,8 @@ public class LocationService {
     public LocationResponse createLocation(CreateLocationRequest request) {
         // .orElseThrow handles the case that there is no user with said ID (findById
         // returns Optional<User>)
-        // TODO: Currently uses createdById for testing, get user from auth context when authentication is added
+        // TODO: Currently uses createdById for testing, get user from auth context when
+        // authentication is added
         User user = userRepository.findById(request.getCreatedById())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -44,27 +46,53 @@ public class LocationService {
     }
 
     public List<LocationResponse> getLocations(Location.Category category, Location.Status status) {
-    List<Location> locations;
+        List<Location> locations;
 
-    if (category != null && status != null) {
-        locations = locationRepository.findByCategoryAndStatus(category, status);
-    } else if (category != null) {
-        locations = locationRepository.findByCategory(category);
-    } else if (status != null) {
-        locations = locationRepository.findByStatus(status);
-    } else {
-        locations = locationRepository.findAll();
+        if (category != null && status != null) {
+            locations = locationRepository.findByCategoryAndStatus(category, status);
+        } else if (category != null) {
+            locations = locationRepository.findByCategory(category);
+        } else if (status != null) {
+            locations = locationRepository.findByStatus(status);
+        } else {
+            locations = locationRepository.findAll();
+        }
+
+        return locations.stream()
+                .map(LocationResponse::new)
+                .toList();
     }
 
-    return locations.stream()
-            .map(LocationResponse::new)
-            .toList();
-}
-
     public LocationResponse getLocationById(UUID id) {
-    Location location = locationRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Location not found"));
+        Location location = locationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Location not found"));
 
-    return new LocationResponse(location);
-}
+        return new LocationResponse(location);
+    }
+
+    public LocationResponse updateLocation(UUID id, UpdateLocationRequest request) {
+        Location location = locationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Location not found"));
+
+        if (request.getName() != null) {
+            location.setName(request.getName());
+        }
+        if (request.getDescription() != null) {
+            location.setDescription(request.getDescription());
+        }
+        if (request.getCategory() != null) {
+            location.setCategory(request.getCategory());
+        }
+        if (request.getTags() != null) {
+            location.setTags(request.getTags());
+        }
+        if (request.getLat() != null) {
+            location.setLat(request.getLat());
+        }
+        if (request.getLng() != null) {
+            location.setLng(request.getLng());
+        }
+        Location saved = locationRepository.save(location);
+        return new LocationResponse(saved);
+    }
 }
