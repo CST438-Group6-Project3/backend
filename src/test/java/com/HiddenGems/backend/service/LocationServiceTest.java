@@ -2,6 +2,7 @@ package com.HiddenGems.backend.service;
 
 import com.HiddenGems.backend.dto.location.CreateLocationRequest;
 import com.HiddenGems.backend.dto.location.LocationResponse;
+import com.HiddenGems.backend.dto.location.UpdateLocationRequest;
 import com.HiddenGems.backend.entity.Location;
 import com.HiddenGems.backend.entity.User;
 import com.HiddenGems.backend.repository.LocationRepository;
@@ -192,5 +193,75 @@ class LocationServiceTest {
         assertEquals(userId, responses.get(1).getCreatedById());
 
         verify(locationRepository).findAll();
+    }
+
+    @Test
+    void getAllLocations_shouldReturnEmptyList_whenNoLocationsExist() {
+        when(locationRepository.findAll()).thenReturn(List.of());
+
+        List<LocationResponse> responses = locationService.getLocations(null, null);
+
+        assertNotNull(responses);
+        assertTrue(responses.isEmpty());
+
+        verify(locationRepository).findAll();
+    }
+
+    @Test
+    void updateLocation_shouldUpdateProvidedFields() {
+        UUID locationId = UUID.randomUUID();
+
+        Location existingLocation = new Location();
+        existingLocation.setId(locationId);
+        existingLocation.setName("Old Name");
+        existingLocation.setDescription("Old description");
+        existingLocation.setCategory(Location.Category.scenic);
+        existingLocation.setTags(new String[] { "oldTag" });
+        existingLocation.setLat(36.6);
+        existingLocation.setLng(-121.9);
+        existingLocation.setCreatedBy(user);
+
+        UpdateLocationRequest request = new UpdateLocationRequest();
+        request.setName("Updated Name");
+        request.setDescription("Updated description");
+        request.setCategory(Location.Category.trail);
+        request.setTags(new String[] { "newTag1", "newTag2" });
+        request.setLat(36.7);
+        request.setLng(-121.8);
+
+        when(locationRepository.findById(locationId)).thenReturn(Optional.of(existingLocation));
+        when(locationRepository.save(any(Location.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        LocationResponse response = locationService.updateLocation(locationId, request);
+
+        assertNotNull(response);
+        assertEquals(locationId, response.getId());
+        assertEquals("Updated Name", response.getName());
+        assertEquals("Updated description", response.getDescription());
+        assertEquals(Location.Category.trail, response.getCategory());
+        assertArrayEquals(new String[] { "newTag1", "newTag2" }, response.getTags());
+        assertEquals(36.7, response.getLat());
+        assertEquals(-121.8, response.getLng());
+        assertEquals(userId, response.getCreatedById());
+
+        verify(locationRepository).findById(locationId);
+        verify(locationRepository).save(existingLocation);
+    }
+
+    @Test
+    void updateLocation_shouldThrow_whenLocationNotFound() {
+        UUID missingLocationId = UUID.randomUUID();
+
+        UpdateLocationRequest request = new UpdateLocationRequest();
+        request.setName("Updated Name");
+
+        when(locationRepository.findById(missingLocationId)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> locationService.updateLocation(missingLocationId, request));
+
+        assertEquals("Location not found", ex.getMessage());
+        verify(locationRepository).findById(missingLocationId);
+        verify(locationRepository, never()).save(any(Location.class));
     }
 }
