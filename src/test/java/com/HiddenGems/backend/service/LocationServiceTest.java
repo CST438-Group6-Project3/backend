@@ -264,4 +264,38 @@ class LocationServiceTest {
         verify(locationRepository).findById(missingLocationId);
         verify(locationRepository, never()).save(any(Location.class));
     }
+
+    @Test
+    void deleteLocation_shouldDeleteLocation_whenLocationExists() {
+        UUID locationId = UUID.randomUUID();
+
+        Location location = new Location();
+        location.setId(locationId);
+        location.setName("Test Spot");
+        location.setCategory(Location.Category.scenic);
+        location.setLat(36.6);
+        location.setLng(-121.9);
+        location.setCreatedBy(user);
+
+        when(locationRepository.findById(locationId)).thenReturn(Optional.of(location));
+
+        locationService.deleteLocation(locationId);
+
+        verify(locationRepository).findById(locationId);
+        verify(locationRepository).delete(location);
+    }
+
+    @Test
+    void deleteLocation_shouldThrow_whenLocationNotFound() {
+        UUID missingLocationId = UUID.randomUUID();
+
+        when(locationRepository.findById(missingLocationId)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> locationService.deleteLocation(missingLocationId));
+
+        assertEquals("Location not found", ex.getMessage());
+        verify(locationRepository).findById(missingLocationId);
+        verify(locationRepository, never()).delete(any(Location.class));
+    }
 }
