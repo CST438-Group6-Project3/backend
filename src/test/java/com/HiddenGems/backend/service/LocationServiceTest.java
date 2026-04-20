@@ -9,7 +9,6 @@ import com.HiddenGems.backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,7 +50,7 @@ class LocationServiceTest {
         request.setName("Test Spot");
         request.setDescription("Testing");
         request.setCategory(Location.Category.scenic);
-        request.setTags(new String[]{"test"});
+        request.setTags(new String[] { "test" });
         request.setLat(36.6);
         request.setLng(-121.9);
         request.setCreatedById(userId);
@@ -97,5 +97,51 @@ class LocationServiceTest {
 
         assertEquals("User not found", ex.getMessage());
         verify(locationRepository, never()).save(any());
+    }
+
+    @Test
+    void getLocationById_shouldReturnLocationReaponse_whenExists() {
+        UUID locationId = UUID.randomUUID();
+
+        // create location
+        Location location = new Location();
+        location.setId(locationId);
+        location.setName("Scenic Spot");
+        location.setDescription("Nice view");
+        location.setCategory(Location.Category.scenic);
+        location.setTags(new String[] { "ocean", "sunset" });
+        location.setLat(36.6);
+        location.setLng(-121.9);
+        location.setCreatedBy(user);
+
+        when(locationRepository.findById(locationId)).thenReturn(Optional.of(location));
+
+        LocationResponse response = locationService.getLocationById(locationId);
+
+        // compare location fields to fields in response
+        assertNotNull(response);
+        assertEquals(locationId, response.getId());
+        assertEquals("Scenic Spot", response.getName());
+        assertEquals("Nice view", response.getDescription());
+        assertEquals(Location.Category.scenic, response.getCategory());
+        assertArrayEquals(new String[] { "ocean", "sunset" }, response.getTags());
+        assertEquals(36.6, response.getLat());
+        assertEquals(-121.9, response.getLng());
+        assertEquals(userId, response.getCreatedById());
+
+        verify(locationRepository).findById(locationId);
+    }
+
+    @Test
+    void getLocationById_shouldThrow_whenLocationNotFound() {
+        UUID missingLocationId = UUID.randomUUID();
+
+        when(locationRepository.findById(missingLocationId)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> locationService.getLocationById(missingLocationId));
+
+        assertEquals("Location not found", ex.getMessage());
+        verify(locationRepository).findById(missingLocationId);
     }
 }
