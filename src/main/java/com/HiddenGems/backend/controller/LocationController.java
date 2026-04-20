@@ -24,12 +24,14 @@ public class LocationController {
         this.locationService = locationService;
     }
 
+    // @valid uses dto to verify fields before acting on request
     @PostMapping
     public ResponseEntity<LocationResponse> createLocation(@Valid @RequestBody CreateLocationRequest request) {
         LocationResponse created = locationService.createLocation(request);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
+    // Request param = query string parameters
     @GetMapping
     public ResponseEntity<List<LocationResponse>> getLocations(
             @RequestParam(required = false) Location.Category category,
@@ -50,5 +52,11 @@ public class LocationController {
             @Valid @RequestBody UpdateLocationRequest request) {
         LocationResponse updated = locationService.updateLocation(id, request);
         return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLocation(@PathVariable UUID id) {
+        locationService.deleteLocation(id);
+        return ResponseEntity.noContent().build();
     }
 }

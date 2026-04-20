@@ -95,4 +95,11 @@ public class LocationService {
         Location saved = locationRepository.save(location);
         return new LocationResponse(saved);
     }
+
+    public void deleteLocation(UUID id) {
+        Location location = locationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Location not found"));
+
+        locationRepository.delete(location);
+    }
 }
