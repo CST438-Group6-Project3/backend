@@ -98,7 +98,7 @@ class LocationServiceTest {
         RuntimeException ex = assertThrows(RuntimeException.class,
                 () -> locationService.createLocation(request));
 
-        assertEquals("User not found", ex.getMessage());
+        assertEquals("404 NOT_FOUND \"User not found\"", ex.getMessage());
         verify(locationRepository, never()).save(any());
     }
 
@@ -144,7 +144,7 @@ class LocationServiceTest {
         RuntimeException ex = assertThrows(RuntimeException.class,
                 () -> locationService.getLocationById(missingLocationId));
 
-        assertEquals("Location not found", ex.getMessage());
+        assertEquals("404 NOT_FOUND \"Location not found\"", ex.getMessage());
         verify(locationRepository).findById(missingLocationId);
     }
 
@@ -260,7 +260,7 @@ class LocationServiceTest {
         RuntimeException ex = assertThrows(RuntimeException.class,
                 () -> locationService.updateLocation(missingLocationId, request));
 
-        assertEquals("Location not found", ex.getMessage());
+        assertEquals("404 NOT_FOUND \"Location not found\"", ex.getMessage());
         verify(locationRepository).findById(missingLocationId);
         verify(locationRepository, never()).save(any(Location.class));
     }
@@ -294,7 +294,7 @@ class LocationServiceTest {
         RuntimeException ex = assertThrows(RuntimeException.class,
                 () -> locationService.deleteLocation(missingLocationId));
 
-        assertEquals("Location not found", ex.getMessage());
+        assertEquals("404 NOT_FOUND \"Location not found\"", ex.getMessage());
         verify(locationRepository).findById(missingLocationId);
         verify(locationRepository, never()).delete(any(Location.class));
     }

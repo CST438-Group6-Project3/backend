@@ -11,7 +11,9 @@ import com.HiddenGems.backend.repository.UserRepository;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class LocationService {
@@ -30,7 +32,7 @@ public class LocationService {
         // TODO: Currently uses createdById for testing, get user from auth context when
         // authentication is added
         User user = userRepository.findById(request.getCreatedById())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         Location location = new Location();
         location.setName(request.getName());
@@ -65,14 +67,14 @@ public class LocationService {
 
     public LocationResponse getLocationById(UUID id) {
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Location not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
 
         return new LocationResponse(location);
     }
 
     public LocationResponse updateLocation(UUID id, UpdateLocationRequest request) {
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Location not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
 
         if (request.getName() != null) {
             location.setName(request.getName());
@@ -98,7 +100,7 @@ public class LocationService {
 
     public void deleteLocation(UUID id) {
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Location not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
 
         locationRepository.delete(location);
     }
