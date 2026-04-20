@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -143,5 +145,52 @@ class LocationServiceTest {
 
         assertEquals("Location not found", ex.getMessage());
         verify(locationRepository).findById(missingLocationId);
+    }
+
+    @Test
+    void getAllLocations_shouldReturnMappedLocationResponses() {
+        UUID locationId1 = UUID.randomUUID();
+        UUID locationId2 = UUID.randomUUID();
+
+        Location location1 = new Location();
+        location1.setId(locationId1);
+        location1.setName("Scenic Spot");
+        location1.setDescription("Nice view");
+        location1.setCategory(Location.Category.scenic);
+        location1.setTags(new String[] { "ocean", "sunset" });
+        location1.setLat(36.6);
+        location1.setLng(-121.9);
+        location1.setCreatedBy(user);
+
+        Location location2 = new Location();
+        location2.setId(locationId2);
+        location2.setName("Trail Spot");
+        location2.setDescription("Good walk");
+        location2.setCategory(Location.Category.trail);
+        location2.setTags(new String[] { "hike" });
+        location2.setLat(36.7);
+        location2.setLng(-121.8);
+        location2.setCreatedBy(user);
+
+        when(locationRepository.findAll()).thenReturn(Arrays.asList(location1, location2));
+
+        List<LocationResponse> responses = locationService.getLocations(null, null);
+
+        assertNotNull(responses);
+        assertEquals(2, responses.size());
+
+        assertEquals(locationId1, responses.get(0).getId());
+        assertEquals("Scenic Spot", responses.get(0).getName());
+        assertEquals(Location.Category.scenic, responses.get(0).getCategory());
+        assertArrayEquals(new String[] { "ocean", "sunset" }, responses.get(0).getTags());
+        assertEquals(userId, responses.get(0).getCreatedById());
+
+        assertEquals(locationId2, responses.get(1).getId());
+        assertEquals("Trail Spot", responses.get(1).getName());
+        assertEquals(Location.Category.trail, responses.get(1).getCategory());
+        assertArrayEquals(new String[] { "hike" }, responses.get(1).getTags());
+        assertEquals(userId, responses.get(1).getCreatedById());
+
+        verify(locationRepository).findAll();
     }
 }
