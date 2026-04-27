@@ -4,12 +4,9 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-    name = "reviews",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id", "location_id"})
-    }
-)
+@Table(name = "reviews", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "user_id", "location_id" })
+})
 public class Review {
 
     @Id
@@ -36,6 +33,9 @@ public class Review {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "image_urls", columnDefinition = "text[]")
+    private String[] imageUrls;
 
     public Review() {
     }
@@ -102,5 +102,13 @@ public class Review {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String[] getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(String[] imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

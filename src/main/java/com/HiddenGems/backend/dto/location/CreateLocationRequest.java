@@ -39,6 +39,9 @@ public class CreateLocationRequest {
     @NotNull(message = "createdById is required")
     private UUID createdById;
 
+    @Size(max = 10, message = "A location can have at most 10 images")
+    private String[] imageUrls;
+
     public CreateLocationRequest() {
     }
 
@@ -96,5 +99,13 @@ public class CreateLocationRequest {
 
     public void setCreatedById(UUID createdById) {
         this.createdById = createdById;
+    }
+
+    public String[] getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(String[] imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }
