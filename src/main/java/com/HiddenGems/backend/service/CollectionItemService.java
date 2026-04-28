@@ -1,3 +1,11 @@
+package com.HiddenGems.backend.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.HiddenGems.backend.entity.CollectionItem;
+import com.HiddenGems.backend.repository.CollectionItemRepository;
+
 @Service
 public class CollectionItemService {
 
