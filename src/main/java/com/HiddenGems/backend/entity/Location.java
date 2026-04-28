@@ -73,6 +73,9 @@ public class Location {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "image_urls", columnDefinition = "text[]")
+    private String[] imageUrls;
+
     // constructor
     public Location() {
     }
@@ -164,5 +167,13 @@ public class Location {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public String[] getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(String[] imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

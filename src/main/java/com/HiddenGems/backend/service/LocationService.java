@@ -39,6 +39,7 @@ public class LocationService {
         location.setDescription(request.getDescription());
         location.setCategory(request.getCategory());
         location.setTags(request.getTags());
+        location.setImageUrls(request.getImageUrls());
         location.setLat(request.getLat());
         location.setLng(request.getLng());
         location.setCreatedBy(user);
@@ -87,6 +88,9 @@ public class LocationService {
         }
         if (request.getTags() != null) {
             location.setTags(request.getTags());
+        }
+        if (request.getImageUrls() != null) {
+            location.setImageUrls(request.getImageUrls());
         }
         if (request.getLat() != null) {
             location.setLat(request.getLat());
