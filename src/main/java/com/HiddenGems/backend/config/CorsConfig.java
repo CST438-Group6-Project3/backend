@@ -16,7 +16,9 @@ public class CorsConfig {
                 registry.addMapping("/api/**")
                         .allowedOrigins(
                             "http://localhost:8081", // Expo web dev
-                            "exp://10.0.0.225:8081"
+                            "exp://10.0.0.225:8081",
+                            "http://localhost:3000", // React web dev
+                            "http://localhost:80"    // React production (Docker)
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
