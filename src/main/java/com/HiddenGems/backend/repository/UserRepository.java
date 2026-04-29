@@ -2,8 +2,21 @@ package com.HiddenGems.backend.repository;
 
 import com.HiddenGems.backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+<<<<<<< Updated upstream
 
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 }
+=======
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, UUID> {
+    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
+}
+>>>>>>> Stashed changes
