@@ -20,6 +20,7 @@ public class LocationResponse {
     private BigDecimal avgRating;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String[] imageUrls;
 
     public LocationResponse() {
     }
@@ -37,6 +38,7 @@ public class LocationResponse {
         this.avgRating = location.getAvgRating();
         this.createdAt = location.getCreatedAt();
         this.updatedAt = location.getUpdatedAt();
+        this.imageUrls = location.getImageUrls();
     }
 
     public UUID getId() {
@@ -133,5 +135,13 @@ public class LocationResponse {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String[] getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(String[] imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }
