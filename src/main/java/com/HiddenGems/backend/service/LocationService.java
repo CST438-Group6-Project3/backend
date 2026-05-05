@@ -38,8 +38,8 @@ public class LocationService {
         location.setName(request.getName());
         location.setDescription(request.getDescription());
         location.setCategory(request.getCategory());
-        location.setTags(request.getTags());
-        location.setImageUrls(request.getImageUrls());
+        location.setTags(request.getTags() == null ? new String[]{} : request.getTags());
+        location.setImageUrls(request.getImageUrls() == null ? new String[]{} : request.getImageUrls());
         location.setLat(request.getLat());
         location.setLng(request.getLng());
         location.setCreatedBy(user);
