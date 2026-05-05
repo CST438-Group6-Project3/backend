@@ -25,6 +25,9 @@ public class UpdateLocationRequest {
     @DecimalMax(value = "180.0", message = "Longitude must be at most 180")
     private Double lng;
 
+    @Size(max = 10, message = "A location can have at most 10 images")
+    private String[] imageUrls;
+
     public UpdateLocationRequest() {
     }
 
@@ -74,5 +77,13 @@ public class UpdateLocationRequest {
 
     public void setLng(Double lng) {
         this.lng = lng;
+    }
+
+    public String[] getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(String[] imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

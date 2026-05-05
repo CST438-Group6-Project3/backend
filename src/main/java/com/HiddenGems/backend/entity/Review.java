@@ -1,4 +1,4 @@
-package com.Hidden.backend.entity;
+package com.HiddenGems.backend.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
