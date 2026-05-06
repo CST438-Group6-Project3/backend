@@ -27,21 +27,21 @@ public class CollectionItemService {
     @Autowired
     private LocationRepository locationRepo;
 
-    // 🔥 Add item
+    // Add item
     public void addItem(UUID collectionId, UUID locationId) {
 
-        // ✅ Fetch entities
+        // Fetch entities
         Collection collection = collectionRepo.findById(collectionId)
                 .orElseThrow(() -> new RuntimeException("Collection not found"));
 
         Location location = locationRepo.findById(locationId)
                 .orElseThrow(() -> new RuntimeException("Location not found"));
 
-        // ✅ Prevent duplicates
+        // Prevent duplicates
         boolean exists = repo.existsByCollection_IdAndLocation_Id(collectionId, locationId);
         if (exists) return;
 
-        // ✅ Create relationship
+        // Create relationship
         CollectionItem item = new CollectionItem();
         item.setCollection(collection);
         item.setLocation(location);
@@ -49,14 +49,14 @@ public class CollectionItemService {
         repo.save(item);
     }
 
-    // 🔥 Remove item
+    // Remove item
     public void removeItem(UUID collectionId, UUID locationId) {
         repo.deleteByCollection_IdAndLocation_Id(collectionId, locationId);
     }
 
-    // 🔥 Get all locations in a collection
+    // Get all locations in a collection
     public List<LocationResponse> getItems(UUID collectionId) {
-    return repo.findByCollection_Id(collectionId)
+    return repo.findWithLocationByCollectionId(collectionId)
             .stream()
             .map(CollectionItem::getLocation)
             .filter(Objects::nonNull) // 🔥 prevents crashes

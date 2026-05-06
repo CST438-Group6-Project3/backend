@@ -25,21 +25,27 @@ public class LocationResponse {
     public LocationResponse() {
     }
 
-    public LocationResponse(Location location) {
-        this.id = location.getId();
-        this.name = location.getName();
-        this.description = location.getDescription();
-        this.category = location.getCategory();
-        this.tags = location.getTags();
-        this.lat = location.getLat();
-        this.lng = location.getLng();
+   public LocationResponse(Location location) {
+    this.id = location.getId();
+    this.name = location.getName();
+    this.description = location.getDescription();
+    this.category = location.getCategory();
+    this.tags = location.getTags() != null ? location.getTags() : new String[0];
+    this.imageUrls = location.getImageUrls() != null ? location.getImageUrls() : new String[0];
+
+    this.lat = location.getLat();
+    this.lng = location.getLng();
+    if (location.getCreatedBy() != null) {
         this.createdById = location.getCreatedBy().getId();
-        this.status = location.getStatus();
-        this.avgRating = location.getAvgRating();
-        this.createdAt = location.getCreatedAt();
-        this.updatedAt = location.getUpdatedAt();
-        this.imageUrls = location.getImageUrls();
+    } else {
+        this.createdById = null;
     }
+
+    this.status = location.getStatus();
+    this.avgRating = location.getAvgRating();
+    this.createdAt = location.getCreatedAt();
+    this.updatedAt = location.getUpdatedAt();
+}
 
     public UUID getId() {
         return id;
