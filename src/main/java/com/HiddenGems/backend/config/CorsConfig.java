@@ -13,19 +13,15 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
+
                 registry.addMapping("/api/**")
-                        .allowedOrigins(
-                            "http://localhost:8081", // Expo web dev
-                            "exp://10.0.0.225:8081",
-                            "http://localhost:3000", // React web dev
-                            "http://localhost:80",   // React production (Docker)
-                            "http://127.0.0.1:8081",
-                            "https://frontend-ms3ke9ksf-dayshaun-s-projects.vercel.app"
-
-
+                        .allowedOriginPatterns(
+                                "https://*.vercel.app",
+                                "http://localhost:*"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*");
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
