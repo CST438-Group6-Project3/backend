@@ -1,13 +1,12 @@
 package com.HiddenGems.backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.HiddenGems.backend.entity.Location;
 import com.HiddenGems.backend.service.CollectionItemService;
 
 @RestController
@@ -17,17 +16,23 @@ public class CollectionItemController {
     @Autowired
     private CollectionItemService service;
 
-    // Add location to collection
-    @PostMapping("/{collectionId}/items")
-    public void addItem(@PathVariable Long collectionId,
-                        @RequestParam Long locationId) {
+    // 🔥 Add location to collection
+    @PostMapping("/{collectionId}/locations/{locationId}")
+    public void addItem(@PathVariable UUID collectionId,
+                        @PathVariable UUID locationId) {
         service.addItem(collectionId, locationId);
     }
 
-    // Remove location
-    @DeleteMapping("/{collectionId}/items/{locationId}")
-    public void removeItem(@PathVariable Long collectionId,
-                           @PathVariable Long locationId) {
+    // 🔥 Remove location
+    @DeleteMapping("/{collectionId}/locations/{locationId}")
+    public void removeItem(@PathVariable UUID collectionId,
+                           @PathVariable UUID locationId) {
         service.removeItem(collectionId, locationId);
+    }
+
+    // 🔥 Get all locations in a collection (album view)
+    @GetMapping("/{collectionId}/locations")
+    public List<Location> getItems(@PathVariable UUID collectionId) {
+        return service.getItems(collectionId);
     }
 }

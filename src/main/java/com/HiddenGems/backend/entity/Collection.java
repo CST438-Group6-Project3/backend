@@ -1,5 +1,7 @@
 package com.HiddenGems.backend.entity;
 
+import java.util.UUID;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,16 +9,20 @@ import jakarta.persistence.*;
 public class Collection {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long userId;
+    @GeneratedValue
+    private UUID id;
+
+    private UUID userId;
+
     private String name;
 
-    public Long getId() {
+    // getters/setters
+
+    public UUID getId() {
         return id;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
@@ -24,11 +30,11 @@ public class Collection {
         return name;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
