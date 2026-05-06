@@ -18,6 +18,7 @@ public class CorsConfig {
                             "http://localhost:*",
                             "http://127.0.0.1:*",
                             "exp://*",
+                            "https://frontend-project3-cst438.onrender.com",
                             "https://*.onrender.com"
                         )
                         .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS")
