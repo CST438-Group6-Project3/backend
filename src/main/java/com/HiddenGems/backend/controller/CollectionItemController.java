@@ -32,7 +32,7 @@ public class CollectionItemController {
 
     // 🔥 Get all locations in a collection (album view)
     @GetMapping("/{collectionId}/locations")
-    public List<Location> getItems(@PathVariable UUID collectionId) {
+    public List<LocationResponse> getItems(@PathVariable UUID collectionId) {
         return service.getItems(collectionId);
     }
 }

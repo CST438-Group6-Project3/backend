@@ -12,6 +12,8 @@ import com.HiddenGems.backend.entity.Location;
 import com.HiddenGems.backend.repository.CollectionItemRepository;
 import com.HiddenGems.backend.repository.CollectionRepository;
 import com.HiddenGems.backend.repository.LocationRepository;
+import java.util.Objects;
+import com.HiddenGems.backend.dto.location.LocationResponse;
 
 @Service
 public class CollectionItemService {
@@ -53,10 +55,12 @@ public class CollectionItemService {
     }
 
     // 🔥 Get all locations in a collection
-    public List<Location> getItems(UUID collectionId) {
-        return repo.findByCollection_Id(collectionId)
-                   .stream()
-                   .map(CollectionItem::getLocation)
-                   .toList();
-    }
+    public List<LocationResponse> getItems(UUID collectionId) {
+    return repo.findByCollection_Id(collectionId)
+            .stream()
+            .map(CollectionItem::getLocation)
+            .filter(Objects::nonNull) // 🔥 prevents crashes
+            .map(LocationResponse::new) // 🔥 convert to DTO
+            .toList();
+}
 }
