@@ -1,21 +1,15 @@
 package com.HiddenGems.backend.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.HiddenGems.backend.entity.Collection;
 import com.HiddenGems.backend.service.CollectionService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import com.HiddenGems.backend.service.CollectionItemService;
 
 @RestController
 @RequestMapping("/api/collections")
@@ -24,13 +18,19 @@ public class CollectionController {
     @Autowired
     private CollectionService collectionService;
 
+    @Autowired
+    private CollectionItemService collectionItemService;
+
     @PostMapping
     public Collection createCollection(@RequestBody Collection collection) {
+        if (collection.getName() == null || collection.getName().isEmpty()) {
+            throw new RuntimeException("Collection name required");
+        }
         return collectionService.create(collection);
     }
 
     @GetMapping
-    public List<Collection> getUserCollections(@RequestParam Long userId) {
+    public List<Collection> getUserCollections(@RequestParam String userId) {
         return collectionService.getUserCollections(userId);
     }
 
@@ -41,7 +41,18 @@ public class CollectionController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCollection(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCollection(@PathVariable Long id) {
         collectionService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ADD THIS
+    @PostMapping("/save")
+    public void saveToCollection(@RequestParam String userId,
+                                 @RequestParam UUID locationId) {
+
+        Collection collection = collectionService.getOrCreateDefaultCollection(userId);
+
+        collectionItemService.addItem(collection.getId(), locationId);
     }
 }

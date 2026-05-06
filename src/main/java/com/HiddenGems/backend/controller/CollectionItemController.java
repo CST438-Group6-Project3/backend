@@ -1,13 +1,12 @@
 package com.HiddenGems.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
+import com.HiddenGems.backend.entity.Location;
 import com.HiddenGems.backend.service.CollectionItemService;
 
 @RestController
@@ -17,17 +16,21 @@ public class CollectionItemController {
     @Autowired
     private CollectionItemService service;
 
-    // Add location to collection
     @PostMapping("/{collectionId}/items")
     public void addItem(@PathVariable Long collectionId,
-                        @RequestParam Long locationId) {
-        service.addItem(collectionId, locationId);
+                        @RequestBody AddItemRequest request) {
+        service.addItem(collectionId, request.locationId);
     }
 
-    // Remove location
+    @GetMapping("/{collectionId}/items")
+    public List<Location> getItems(@PathVariable Long collectionId) {
+        return service.getLocationsByCollection(collectionId);
+    }
+
     @DeleteMapping("/{collectionId}/items/{locationId}")
-    public void removeItem(@PathVariable Long collectionId,
-                           @PathVariable Long locationId) {
+    public ResponseEntity<Void> removeItem(@PathVariable Long collectionId,
+                                           @PathVariable Long locationId) {
         service.removeItem(collectionId, locationId);
+        return ResponseEntity.noContent().build();
     }
 }

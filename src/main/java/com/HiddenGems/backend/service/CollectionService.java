@@ -17,7 +17,22 @@ public class CollectionService {
         return repo.save(c);
     }
 
-    public List<Collection> getUserCollections(Long userId) {
+    // 🔥 MAIN METHOD YOU SHOULD USE
+    public Collection getOrCreateDefaultCollection(String userId) {
+
+        return repo.findByUserId(userId)
+            .stream()
+            .findFirst()
+            .orElseGet(() -> {
+                Collection c = new Collection();
+                c.setUserId(userId);
+                c.setName("My Collection");
+                return repo.save(c);
+            });
+    }
+
+    // optional (if you still want list)
+    public List<Collection> getUserCollections(String userId) {
         return repo.findByUserId(userId);
     }
 

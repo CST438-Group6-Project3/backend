@@ -9,14 +9,19 @@ public class Collection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
+
+    
+    @Column(nullable = false)
+    private String userId;
+
+    @Column(nullable = false)
     private String name;
 
     public Long getId() {
         return id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -28,7 +33,7 @@ public class Collection {
         this.id = id;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
