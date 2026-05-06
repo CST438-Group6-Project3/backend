@@ -29,6 +29,15 @@ public class AdminController {
         return userRepository.findAll();
     }
 
+    @PutMapping("/users/{id}/promote")
+    public User promoteUser(@PathVariable UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        user.setRole("admin");
+        return userRepository.save(user);
+    }
+
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable UUID id) {
         User user = userRepository.findById(id)
@@ -41,26 +50,60 @@ public class AdminController {
         userRepository.delete(user);
     }
 
+    @GetMapping("/locations/status/{status}")
+    public List<LocationAdminResponse> getLocationsByStatus(@PathVariable Location.Status status) {
+        return locationRepository.findByStatus(status)
+                .stream()
+                .map(LocationAdminResponse::from)
+                .toList();
+    }
+
     @GetMapping("/locations/pending")
-    public List<Location> getPendingLocations() {
-        return locationRepository.findByStatus(Location.Status.pending);
+    public List<LocationAdminResponse> getPendingLocations() {
+        return getLocationsByStatus(Location.Status.pending);
     }
 
     @PutMapping("/locations/{id}/verify")
-    public Location verifyLocation(@PathVariable UUID id) {
+    public LocationAdminResponse verifyLocation(@PathVariable UUID id) {
         Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
 
         location.setStatus(Location.Status.verified);
-        return locationRepository.save(location);
+        return LocationAdminResponse.from(locationRepository.save(location));
     }
 
     @PutMapping("/locations/{id}/archive")
-    public Location archiveLocation(@PathVariable UUID id) {
+    public LocationAdminResponse archiveLocation(@PathVariable UUID id) {
         Location location = locationRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
 
         location.setStatus(Location.Status.archived);
-        return locationRepository.save(location);
+        return LocationAdminResponse.from(locationRepository.save(location));
+    }
+
+    public record LocationAdminResponse(
+            UUID id,
+            String name,
+            String description,
+            Location.Category category,
+            String[] tags,
+            String[] imageUrls,
+            Double lat,
+            Double lng,
+            Location.Status status
+    ) {
+        public static LocationAdminResponse from(Location location) {
+            return new LocationAdminResponse(
+                    location.getId(),
+                    location.getName(),
+                    location.getDescription(),
+                    location.getCategory(),
+                    location.getTags(),
+                    location.getImageUrls(),
+                    location.getLat(),
+                    location.getLng(),
+                    location.getStatus()
+            );
+        }
     }
 }
